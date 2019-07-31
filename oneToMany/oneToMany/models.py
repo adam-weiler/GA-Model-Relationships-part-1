@@ -34,7 +34,7 @@ class Role(models.Model):
 
 
 
-# Question 2 - Vet clinic:
+# Question 2 - Vet clinic appointments:
 
 class Breed(models.Model): #Breed must be written first.
     breed_name = models.CharField(max_length=255)
@@ -79,3 +79,45 @@ class Appointment(models.Model):
     def __str__(self):
         return f"appointment_date = {self.appointment_date}"
 
+
+
+# Question 3 - Restaurant reviews:
+
+class Publication(models.Model): #Publication must be written first.
+    publication_name = models.CharField(max_length=255)
+    publication_address = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"publication_name = {self.publication_name}"
+
+class Restaurant(models.Model): #Restaurant must be written first.
+    restaurant_name = models.CharField(max_length=255)
+    restaurant_address = models.CharField(max_length=255)
+    accessible = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"restaurant_name = {self.restaurant_name}"
+
+class Chef(models.Model):
+    chef_name = models.CharField(max_length=255)
+    # restaurant_id = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='restaurants')
+
+    def __str__(self):
+        return f"chef_name = {self.chef_name}"
+
+class Critic(models.Model):
+    critic_name = models.CharField(max_length=255)
+    publication_id = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='publications')
+
+    def __str__(self):
+        return f"critic_name = {self.critic_name}"
+
+class Review(models.Model):
+    title = models.CharField(max_length=255)
+    date = models.DateTimeField(default=timezone.localtime())
+    rating = models.IntegerField()
+    restaurant_id = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='restaurants')
+    critic_id = models.ForeignKey(Critic, on_delete=models.CASCADE, related_name='critics')
+
+    def __str__(self):
+        return f"title = {self.title}"
