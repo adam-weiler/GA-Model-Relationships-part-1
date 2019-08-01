@@ -33,7 +33,7 @@ class Films_Watched(models.Model): #Has Many Through
 
 
 
-# 3. Imagine an app that allows users to keep track of the books they've read:
+# 2. Imagine an app that allows users to keep track of the books they've read:
 class Author(models.Model): #Author must be written first.
     name = models.CharField(max_length=255)
     biography = models.TextField(max_length=255)
@@ -77,6 +77,52 @@ class Chapter(models.Model):
     length = models.IntegerField()
     summary = models.CharField(max_length=255)
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='book_chapters')
+
+    def __str__(self):
+        return f'title = {self.title}'
+
+
+
+# 3. Comics:
+class Artist(models.Model): #Artist must be written first.
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'first_name = {self.first_name}, last_name = {self.last_name}'
+
+class Comic(models.Model): #Comic must be written first.
+    series = models.CharField(max_length=255)
+    genre = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'series = {self.series}'
+
+class Writer(models.Model): #Writer must be written first.
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'first_name = {self.first_name}, last_name = {self.last_name}'
+
+class Comic_Artist(models.Model): #Has Many Through
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='artists_comic')
+    comic = models.ForeignKey(Comic, on_delete=models.CASCADE, related_name='comics_artist')
+
+    def __str__(self):
+        return f'artist {self.artist}, comic {self.comic}'
+
+class Comic_Writer(models.Model): #Has Many Through
+    comic = models.ForeignKey(Comic, on_delete=models.CASCADE, related_name='comics_writer')
+    writer = models.ForeignKey(Writer, on_delete=models.CASCADE, related_name='writers_comic')
+
+    def __str__(self):
+        return f'comic {self.comic}, writer {self.writer}'
+
+class Issue(models.Model):
+    title = models.CharField(max_length=255)
+    year = models.IntegerField()
+    comic_id = models.ForeignKey(Comic, on_delete=models.CASCADE, related_name='comics')
 
     def __str__(self):
         return f'title = {self.title}'
